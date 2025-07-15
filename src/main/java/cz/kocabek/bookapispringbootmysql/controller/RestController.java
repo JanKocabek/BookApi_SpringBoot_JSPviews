@@ -14,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@RestController
+@org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api")
-public class RESTApiBookController {
+public class RestController {
 
     private final BookService bookService;
 
@@ -25,7 +25,7 @@ public class RESTApiBookController {
     }
 
     @Autowired
-    public RESTApiBookController(BookService bookService) {
+    public RestController(BookService bookService) {
         this.bookService = bookService;
     }
 
