@@ -15,13 +15,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Service
 public class BookService {
 
-    private final MemoryBookRepository memoryBookRepository;
     private final BookRepository bookRepository;
 
     @Autowired
-    public BookService(BookRepository bookRepository, MemoryBookRepository memoryBookRepository) {
+    public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-        this.memoryBookRepository = memoryBookRepository;
     }
 
     public BooksDTO getBooks() {
