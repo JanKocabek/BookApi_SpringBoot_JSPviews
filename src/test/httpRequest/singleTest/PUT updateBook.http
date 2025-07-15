@@ -3,7 +3,7 @@ PUT http://localhost:8080/books
 Content-Type: application/json
 
 {
-  "id": 11,
+  "id": 2,
   "isbn": "978-0-15-601219-6",
   "title": "Thinking in C#",
   "publisher": "IT Books",
