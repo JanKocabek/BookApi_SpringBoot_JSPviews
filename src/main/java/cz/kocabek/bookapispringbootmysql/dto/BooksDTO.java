@@ -10,14 +10,14 @@ import java.util.List;
 public class BooksDTO {
     @JsonView(View.Book.class)
     @JsonProperty("books")
-    private final List<BookDTO> bookDTOS;
+    private final List<BookDTO> bookDTOList;
     @JsonView(View.Book.class)
     private int status;
     @JsonView(View.Book.class)
     private final int count;
 
     public BooksDTO(List<Book> books, String uri) {
-        this.bookDTOS = wrapBooksToDTO(books, uri);
+        this.bookDTOList = wrapBooksToDTO(books, uri);
         this.count = books.size();
     }
 
@@ -26,8 +26,8 @@ public class BooksDTO {
         return books.stream().map(book -> new BookDTO(book, uri)).toList();
     }
 
-    public List<BookDTO> getBookDTOS() {
-        return bookDTOS;
+    public List<BookDTO> getBookDTOList() {
+        return bookDTOList;
     }
 
     public int getStatus() {
@@ -53,7 +53,7 @@ public class BooksDTO {
         return "BooksDTO{" +
                "status=" + status +
                ", count=" + count +
-               ", bookDTOS=" + bookDTOS +
+               ", bookDTOS=" + bookDTOList +
                '}';
     }
 }
