@@ -5,34 +5,41 @@ import cz.kocabek.bookapispringbootmysql.dto.View;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "books")
 public class Book {
     @JsonView(View.Book.class)
     @Id
     @GeneratedValue
     private Long id;
+
     @JsonView(View.Book.class)
     @NotNull(message = "Book must have ISBN")
     @Pattern(regexp = "^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$", message = "ISBN must be 10  or 13 digits long and can contain only digits and dashes")
     private String isbn;
+
     @JsonView(View.Book.class)
     private String title;
+
     @JsonView(View.Book.class)
     private String author;
+
     @JsonView(View.Book.class)
     private String publisher;
+
     @JsonView(View.Book.class)
     private String type;
+
 
 }
