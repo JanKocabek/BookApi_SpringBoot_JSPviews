@@ -2,10 +2,7 @@ package cz.kocabek.bookapispringbootmysql.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import cz.kocabek.bookapispringbootmysql.dto.View;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -21,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Book {
     @JsonView(View.Book.class)
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonView(View.Book.class)
