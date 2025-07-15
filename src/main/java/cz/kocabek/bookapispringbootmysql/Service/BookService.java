@@ -3,7 +3,9 @@ package cz.kocabek.bookapispringbootmysql.Service;
 
 import cz.kocabek.bookapispringbootmysql.dto.BookDTO;
 import cz.kocabek.bookapispringbootmysql.dto.BooksDTO;
+import cz.kocabek.bookapispringbootmysql.exception.BookNotFoundException;
 import cz.kocabek.bookapispringbootmysql.model.Book;
+import cz.kocabek.bookapispringbootmysql.repository.BookRepository;
 import cz.kocabek.bookapispringbootmysql.repository.MemoryBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,22 +15,23 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class BookService {
 
     private final MemoryBookRepository memoryBookRepository;
+    private final BookRepository bookRepository;
 
     @Autowired
-    public BookService(MemoryBookRepository memoryBookRepository) {
+    public BookService(BookRepository bookRepository, MemoryBookRepository memoryBookRepository) {
+        this.bookRepository = bookRepository;
         this.memoryBookRepository = memoryBookRepository;
     }
 
     public BooksDTO getBooks() {
         final String BASE_URI = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        return new BooksDTO(memoryBookRepository.findBooks(), BASE_URI);
+        return new BooksDTO(bookRepository.findAll(), BASE_URI);
     }
 
     public BookDTO getBook(Long id) {
         final String BASE_URI = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        final var book = memoryBookRepository.findBookById(id);
-        return new BookDTO(book, BASE_URI);
-
+        final var bookResult = bookRepository.findById(id);
+        return new BookDTO(bookResult.orElseThrow(() -> new BookNotFoundException("Book with id: %d not found".formatted(id))), BASE_URI);
     }
 
     public BookDTO addBook(Book book) {
