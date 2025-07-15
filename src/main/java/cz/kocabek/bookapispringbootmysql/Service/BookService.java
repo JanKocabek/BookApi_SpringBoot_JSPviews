@@ -39,6 +39,7 @@ public class BookService {
         final var addedBook = bookRepository.save(book);
         return new BookDTO(addedBook, BASE_URI);
     }
+
     @Transactional
     public BookDTO updateBook(Book book) {
         final String BASE_URI = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
@@ -47,7 +48,9 @@ public class BookService {
     }
 
     public void deleteBook(Long id) {
-       bookRepository.deleteById(id);
+        if (!bookRepository.existsById(id))
+            throw new BookNotFoundException("Book with ID %d not found and can't be deleted".formatted(id));
+        bookRepository.deleteById(id);
     }
 }
 
