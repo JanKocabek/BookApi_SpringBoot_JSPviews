@@ -1,0 +1,12 @@
+### PUT request to update Book
+PUT http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "id": 11,
+  "isbn": "978-0-15-601219-6",
+  "title": "Thinking in C#",
+  "publisher": "IT Books",
+  "type": "programming",
+  "author": "Bruce Eckel"
+}

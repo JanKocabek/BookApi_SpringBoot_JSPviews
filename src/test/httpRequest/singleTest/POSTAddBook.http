@@ -1,0 +1,12 @@
+###Add a new book
+
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "isbn": "978-0-15-601219-6",
+  "title": "Thinking in Java",
+  "publisher": "Helion",
+  "type": "programming",
+  "author": "Bruce Eckel"
+}

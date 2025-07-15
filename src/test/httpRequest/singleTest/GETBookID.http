@@ -1,0 +1,4 @@
+### GET request to get book by ID
+GET http://localhost:8080/books/10
+
+###

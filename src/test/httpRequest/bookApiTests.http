@@ -1,0 +1,398 @@
+### 1. Create book with valid 10-digit ISBN
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "isbn": "0-061-96436-0",
+  "title": "Thinking in Java",
+  "publisher": "Helion",
+  "type": "programming",
+  "author": "Bruce Eckel"
+}
+
+> {%
+    client.test("Response should be 201 CREATED", function (){
+        client.assert(response.status === 201, 'Expected status 201, but got: ' + response.status);
+    });
+
+    client.test("Response should contain Location header", function (){
+        client.assert(response.headers.valueOf("Location") !== null, 'Location header should be present');
+    });
+
+    // Store the created book ID for later tests
+    client.global.set("valid_book_id", response.body.book.id);
+    client.global.set("valid_isbn", response.body.book.isbn);
+
+    client.test("Response body should contain correct book data", function (){
+        client.assert(response.body.book.isbn === '0-061-96436-0');
+        client.assert(response.body.book.title === 'Thinking in Java');
+        client.assert(response.body.book.author === 'Bruce Eckel');
+        client.assert(response.body.book.publisher === 'Helion');
+        client.assert(response.body.book.type === 'programming');
+        client.assert(response.body.status === 201);
+    });
+%}
+
+### 2. Create book with valid 13-digit ISBN
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "isbn": "978-0-201-63361-0",
+  "title": "Design Patterns",
+  "publisher": "Addison-Wesley",
+  "type": "programming",
+  "author": "Gang of Four"
+}
+
+> {%
+    client.test("Response should be 201 CREATED", function (){
+        client.assert(response.status === 201, 'Expected status 201, but got: ' + response.status);
+    });
+
+    client.global.set("valid_book_id_13", response.body.book.id);
+    client.global.set("valid_isbn_13", response.body.book.isbn);
+
+    client.test("Response body should contain correct 13-digit ISBN", function (){
+        client.assert(response.body.book.isbn === '978-0-201-63361-0');
+        client.assert(response.body.book.title === 'Design Patterns');
+        client.assert(response.body.status === 201);
+    });
+%}
+
+### 3. Try to create book with malformed ISBN (invalid format)
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "isbn": "invalid-isbn-123",
+  "title": "Invalid Book",
+  "publisher": "Test Publisher",
+  "type": "test",
+  "author": "Test Author"
+}
+
+> {%
+    client.test("Response should be 400 BAD REQUEST", function (){
+        client.assert(response.status === 400, 'Expected status 400, but got: ' + response.status);
+    });
+
+    client.test("Response should contain validation error", function (){
+        client.assert(response.body.title === 'Invalid input data');
+        client.assert(response.body.detail.includes('ISBN must be 10  or 13 digits long'));
+        client.assert(response.body.type.includes('invalid-input-data'));
+    });
+%}
+
+### 4. Try to create book with missing ISBN
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "title": "Book Without ISBN",
+  "publisher": "Test Publisher",
+  "type": "test",
+  "author": "Test Author"
+}
+
+> {%
+    client.test("Response should be 400 BAD REQUEST", function (){
+        client.assert(response.status === 400, 'Expected status 400, but got: ' + response.status);
+    });
+
+    client.test("Response should contain validation error for missing ISBN", function (){
+        client.assert(response.body.title === 'Invalid input data');
+        client.assert(response.body.detail.includes('isbn'));
+    });
+%}
+
+### 5. Try to create book with duplicate ISBN
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "isbn": "{{valid_isbn}}",
+  "title": "Duplicate ISBN Book",
+  "publisher": "Test Publisher",
+  "type": "test",
+  "author": "Test Author"
+}
+
+> {%
+    client.test("Response should be 409 CONFLICT", function (){
+        client.assert(response.status === 409, 'Expected status 409, but got: ' + response.status);
+    });
+
+    client.test("Response should contain duplication error", function (){
+        client.assert(response.body.title === 'Book Duplication');
+        client.assert(response.body.detail.includes('ISBN'));
+        client.assert(response.body.detail.includes('already taken'));
+        client.assert(response.body.type.includes('book-duplication'));
+    });
+%}
+
+### 6. Find book by valid ID
+GET http://localhost:8080/books/{{valid_book_id}}
+
+> {%
+    client.test("Response should be 200 OK", function (){
+        client.assert(response.status === 200, 'Expected status 200, but got: ' + response.status);
+    });
+
+    client.test("Response body should contain correct book data", function (){
+        client.assert(response.body.book.id === client.global.get("valid_book_id"));
+        client.assert(response.body.book.isbn === client.global.get("valid_isbn"));
+        client.assert(response.body.book.title === 'Thinking in Java');
+        client.assert(response.body.status === 200);
+    });
+%}
+
+### 7. Try to find book by non-existent ID
+GET http://localhost:8080/books/99999
+
+> {%
+    client.test("Response should be 404 NOT FOUND", function (){
+        client.assert(response.status === 404, 'Expected status 404, but got: ' + response.status);
+    });
+
+    client.test("Response should contain not found error", function (){
+        client.assert(response.body.title === 'Book not found');
+        client.assert(response.body.detail.includes('Book with id: 99999 not found'));
+        client.assert(response.body.type.includes('book-not-found'));
+    });
+%}
+
+### 8. Update book with valid data
+PUT http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "id": {{valid_book_id}},
+  "isbn": "0-321-35668-3",
+  "title": "Effective Java",
+  "publisher": "Addison-Wesley",
+  "type": "programming",
+  "author": "Joshua Bloch"
+}
+
+> {%
+    client.test("Response should be 200 OK", function (){
+        client.assert(response.status === 200, 'Expected status 200, but got: ' + response.status);
+    });
+
+    client.global.set("updated_isbn", response.body.book.isbn);
+
+    client.test("Response body should contain updated book data", function (){
+        client.assert(response.body.book.id === client.global.get("valid_book_id"));
+        client.assert(response.body.book.isbn === '0-321-35668-3');
+        client.assert(response.body.book.title === 'Effective Java');
+        client.assert(response.body.book.author === 'Joshua Bloch');
+        client.assert(response.body.status === 200);
+    });
+%}
+
+### 9. Try to update book with non-existent ID
+PUT http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "id": 99999,
+  "isbn": "0-123-45678-9",
+  "title": "Non-existent Book",
+  "publisher": "Test Publisher",
+  "type": "test",
+  "author": "Test Author"
+}
+
+> {%
+    client.test("Response should be 404 NOT FOUND", function (){
+        client.assert(response.status === 404, 'Expected status 404, but got: ' + response.status);
+    });
+
+    client.test("Response should contain not found error", function (){
+        client.assert(response.body.title === 'Book not found');
+        client.assert(response.body.detail.includes('Book with id: 99999 not found'));
+        client.assert(response.body.type.includes('book-not-found'));
+    });
+%}
+
+### 10. Try to update book with duplicate ISBN
+PUT http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "id": {{valid_book_id}},
+  "isbn": "{{valid_isbn_13}}",
+  "title": "Trying to Duplicate ISBN",
+  "publisher": "Test Publisher",
+  "type": "test",
+  "author": "Test Author"
+}
+
+> {%
+    client.test("Response should be 409 CONFLICT", function (){
+        client.assert(response.status === 409, 'Expected status 409, but got: ' + response.status);
+    });
+
+    client.test("Response should contain duplication error", function (){
+        client.assert(response.body.title === 'Book Duplication');
+        client.assert(response.body.detail.includes('ISBN'));
+        client.assert(response.body.detail.includes('already taken'));
+        client.assert(response.body.type.includes('book-duplication'));
+    });
+%}
+
+### 11. Try to update book with malformed ISBN
+PUT http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "id": {{valid_book_id}},
+  "isbn": "malformed-isbn",
+  "title": "Book with Bad ISBN",
+  "publisher": "Test Publisher",
+  "type": "test",
+  "author": "Test Author"
+}
+
+> {%
+    client.test("Response should be 400 BAD REQUEST", function (){
+        client.assert(response.status === 400, 'Expected status 400, but got: ' + response.status);
+    });
+
+    client.test("Response should contain validation error", function (){
+        client.assert(response.body.title === 'Invalid input data');
+        client.assert(response.body.detail.includes('ISBN must be 10  or 13 digits long'));
+    });
+%}
+
+### 12. Find all books
+GET http://localhost:8080/books
+
+> {%
+    client.test("Response should be 200 OK", function (){
+        client.assert(response.status === 200, 'Expected status 200, but got: ' + response.status);
+    });
+
+    client.test("Response body should contain books list", function (){
+        client.assert(response.body.books.length > 0, 'Books array should not be empty');
+        client.assert(response.body.count > 0, 'Count should be greater than 0');
+        client.assert(response.body.status === 200);
+    });
+
+    client.test("Each book should have proper structure", function (){
+        const book = response.body.books[0];
+        client.assert(book.book !== undefined, 'Book object should exist');
+        client.assert(book.self !== undefined, 'Self URI should exist');
+        client.assert(book.book.id !== undefined, 'Book ID should exist');
+        client.assert(book.book.isbn !== undefined, 'ISBN should exist');
+    });
+%}
+
+### 13. Delete book with valid ID
+DELETE http://localhost:8080/books/{{valid_book_id_13}}
+
+> {%
+    client.test("Response should be 204 NO CONTENT", function (){
+        client.assert(response.status === 204, 'Expected status 204, but got: ' + response.status);
+    });
+
+    client.test("Response body should be empty", function (){
+        client.assert(!response.body , 'Response body should be empty for 204 status but response body actuality was: ' + response.body);
+    });
+%}
+
+### 14. Try to delete book with non-existent ID
+DELETE http://localhost:8080/books/99999
+
+> {%
+    client.test("Response should be 404 NOT FOUND", function (){
+        client.assert(response.status === 404, 'Expected status 404, but got: ' + response.status);
+    });
+
+    client.test("Response should contain not found error", function (){
+        client.assert(response.body.title === 'Book not found');
+        client.assert(response.body.detail.includes('Book with ID 99999 not found'));
+        client.assert(response.body.type.includes('book-not-found'));
+    });
+%}
+
+### 15. Verify deleted book is gone
+GET http://localhost:8080/books/{{valid_book_id_13}}
+
+> {%
+    client.test("Response should be 404 NOT FOUND", function (){
+        client.assert(response.status === 404, 'Expected status 404, but got: ' + response.status);
+    });
+
+    client.test("Response should contain not found error", function (){
+        client.assert(response.body.title === 'Book not found');
+        client.assert(response.body.detail.includes('not found'));
+    });
+%}
+
+### 16. Test edge case - ISBN with only digits (no dashes)
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "isbn": "0061964360",
+  "title": "Clean Code",
+  "publisher": "Prentice Hall",
+  "type": "programming",
+  "author": "Robert C. Martin"
+}
+
+> {%
+    client.test("Response should be 201 CREATED", function (){
+        client.assert(response.status === 201, 'Expected status 201, but got: ' + response.status);
+    });
+
+    client.global.set("clean_code_id", response.body.book.id);
+
+    client.test("Response should accept ISBN without dashes", function (){
+        client.assert(response.body.book.isbn === '0061964360');
+        client.assert(response.body.book.title === 'Clean Code');
+    });
+%}
+
+### 17. Test edge case - 13-digit ISBN without dashes
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "isbn": "9780134685991",
+  "title": "Effective Java 3rd Edition",
+  "publisher": "Addison-Wesley",
+  "type": "programming",
+  "author": "Joshua Bloch"
+}
+
+> {%
+    client.test("Response should be 201 CREATED", function (){
+        client.assert(response.status === 201, 'Expected status 201, but got: ' + response.status);
+    });
+
+    client.test("Response should accept 13-digit ISBN without dashes", function (){
+        client.assert(response.body.book.isbn === '9780134685991');
+        client.assert(response.body.book.title === 'Effective Java 3rd Edition');
+    });
+%}
+
+### 18. Cleanup - Delete test books
+DELETE http://localhost:8080/books/{{valid_book_id}}
+
+> {%
+    client.test("Cleanup should be successful", function (){
+        client.assert(response.status === 204, 'Expected status 204 for cleanup');
+    });
+%}
+
+### 19. Cleanup - Delete clean code book
+DELETE http://localhost:8080/books/{{clean_code_id}}
+
+> {%
+    client.test("Cleanup should be successful", function (){
+        client.assert(response.status === 204, 'Expected status 204 for cleanup');
+    });
+%}
