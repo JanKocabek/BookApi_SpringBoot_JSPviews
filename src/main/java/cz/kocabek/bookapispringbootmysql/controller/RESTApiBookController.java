@@ -15,26 +15,34 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/books")
-public class BookController {
+@RequestMapping("/api")
+public class RESTApiBookController {
 
     private final BookService bookService;
 
+    private static String getBaseUri() {
+        return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+    }
+
     @Autowired
-    public BookController(BookService bookService) {
+    public RESTApiBookController(BookService bookService) {
         this.bookService = bookService;
     }
 
     @JsonView(View.Book.class)
     @GetMapping("")
     public ResponseEntity<BooksDTO> getBooks() {
-        return ResponseEntity.ok(bookService.getBooks().withStatus(HttpStatus.OK));
+        final var books = bookService.getBooks();
+        final var dto = new BooksDTO(books, getBaseUri());
+        return ResponseEntity.ok(dto.withStatus(HttpStatus.OK));
     }
 
     @JsonView(View.BookWithStatus.class)
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(bookService.getBook(id).withStatus(HttpStatus.OK));
+        final var book = bookService.getBook(id);
+        final var dto= new BookDTO(book,getBaseUri());
+        return ResponseEntity.ok(dto.withStatus(HttpStatus.OK));
     }
 
     @PostMapping(value = "", consumes = "application/json", produces = "application/json")
