@@ -1,12 +1,15 @@
 package cz.kocabek.bookapispringbootmysql.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
 import cz.kocabek.bookapispringbootmysql.model.Book;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-
+@JsonPropertyOrder({"status", "count", "books"})
+@Data
 public class BooksDTO {
     @JsonView(View.Book.class)
     @JsonProperty("books")
@@ -24,18 +27,6 @@ public class BooksDTO {
 
     private List<BookDTO> wrapBooksToDTO(List<Book> books, String uri) {
         return books.stream().map(book -> new BookDTO(book, uri)).toList();
-    }
-
-    public List<BookDTO> getBookDTOList() {
-        return bookDTOList;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public int getCount() {
-        return count;
     }
 
     public void setStatus(HttpStatus status) {
