@@ -16,8 +16,10 @@
 <%--@elvariable id="book" type="cz.kocabek.bookapispringbootmysql.model.Book"--%>
 <ul>
     <li> Tile: ${book.title}<br/>
-        Author: ${book.author}<br/>
         ISBN: ${book.isbn}<br/>
+        Author: ${book.author}<br/>
+        Publisher: ${book.publisher}<br/>
+        Type: ${book.type}<br/>
     </li>
 </ul>
 </body>

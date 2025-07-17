@@ -13,6 +13,7 @@
         <th>Title</th>
         <th>ISBN</th>
         <th>Author</th>
+        <th>Publisher</th>
         <th>Type</th>
         <th>Action</th>
     </tr>
@@ -24,6 +25,7 @@
             <td>${items.title}</td>
             <td>${items.isbn}</td>
             <td>${items.author}</td>
+            <td>${items.publisher}</td>
             <td>${items.type}</td>
             <td>
                 <a class="btn" href="/books/${items.id}">Show book</a>
