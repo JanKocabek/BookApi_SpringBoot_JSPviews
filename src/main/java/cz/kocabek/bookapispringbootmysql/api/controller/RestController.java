@@ -20,14 +20,16 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class RestController {
 
     private final BookService bookService;
+    private final RestService restService;
 
     private static String getBaseUri() {
         return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
     }
 
     @Autowired
-    public RestController(BookService bookService) {
+    public RestController(BookService bookService, RestService restService) {
         this.bookService = bookService;
+        this.restService = restService;
     }
 
     @JsonView(View.Book.class)
@@ -64,7 +66,7 @@ public class RestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable("id") Long id) {
-        bookService.deleteBook(id);
+        restService.deleteBookById(id);
         return ResponseEntity.noContent().build();
     }
 
