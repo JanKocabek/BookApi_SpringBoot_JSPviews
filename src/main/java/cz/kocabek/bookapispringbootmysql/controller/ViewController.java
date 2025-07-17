@@ -3,7 +3,6 @@ package cz.kocabek.bookapispringbootmysql.controller;
 
 import cz.kocabek.bookapispringbootmysql.Service.BookService;
 import cz.kocabek.bookapispringbootmysql.model.Book;
-import jakarta.persistence.EntityResult;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,7 +50,7 @@ public class ViewController {
     }
 
     @GetMapping("/{id}/edit")
-    public String getUpdateForm(@PathVariable("id") Long id,Model model) {
+    public String getUpdateForm(@PathVariable("id") Long id, Model model) {
         final var book = bookService.getBook(id);
         model.addAttribute("book", book);
         model.addAttribute("action", "update");
@@ -68,6 +67,7 @@ public class ViewController {
         bookService.updateBook(book);
         return "redirect:/books";
     }
+
     @GetMapping("/{id}/delete")
     public String deleteBook(@PathVariable("id") Long id) {
         bookService.deleteBook(id);
