@@ -1,0 +1,39 @@
+/* Center the table on the page */
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin: 20px auto; /* Centers table horizontally */
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    width: fit-content; /* Adjust to content width */
+}
+
+/* Table header styling */
+thead {
+    background-color: #000000;
+    color: white;
+}
+
+/* Table cells */
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+/* Button-style links */
+a.btn {
+    display: inline-block; /* Allows padding/margin to behave like a block */
+    text-decoration: none;
+    color: white;
+    background-color: blue;
+    font-size: 15px;
+    padding: 5px 10px;
+    margin: 5px 5px;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+a:hover {
+    background-color: #333333; /* Subtle hover effect */
+}
