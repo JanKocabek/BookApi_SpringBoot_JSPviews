@@ -1,4 +1,4 @@
-package cz.kocabek.bookapispringbootmysql.dto;
+package cz.kocabek.bookapispringbootmysql.api.dto;
 
 public class View {
 

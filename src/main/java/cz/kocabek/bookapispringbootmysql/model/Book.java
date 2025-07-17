@@ -1,7 +1,7 @@
 package cz.kocabek.bookapispringbootmysql.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import cz.kocabek.bookapispringbootmysql.dto.View;
+import cz.kocabek.bookapispringbootmysql.api.dto.View;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

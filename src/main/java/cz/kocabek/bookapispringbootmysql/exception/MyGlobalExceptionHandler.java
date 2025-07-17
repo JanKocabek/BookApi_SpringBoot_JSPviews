@@ -12,7 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.Instant;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "cz.kocabek.bookapispringbootmysql.api.controller")
 public class MyGlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
