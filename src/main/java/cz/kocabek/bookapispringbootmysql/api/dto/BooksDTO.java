@@ -38,13 +38,4 @@ public class BooksDTO {
         return this;
     }
 
-
-    @Override
-    public String toString() {
-        return "BooksDTO{" +
-               "status=" + status +
-               ", count=" + count +
-               ", bookDTOS=" + bookDTOList +
-               '}';
-    }
 }

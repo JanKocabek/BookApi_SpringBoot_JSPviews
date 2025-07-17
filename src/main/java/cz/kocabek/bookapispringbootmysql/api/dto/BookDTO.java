@@ -34,11 +34,4 @@ public class BookDTO {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "BookDTO{" +
-               "book=" + book +
-               ", selfUri='" + selfUri + '\'' +
-               '}';
-    }
 }
