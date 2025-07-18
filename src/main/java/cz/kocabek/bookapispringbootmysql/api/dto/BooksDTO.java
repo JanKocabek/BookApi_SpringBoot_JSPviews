@@ -8,22 +8,21 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+
 @JsonPropertyOrder({"status", "count", "books"})
+@JsonView(View.Book.class)
 @Data
 public class BooksDTO {
-    @JsonView(View.Book.class)
     @JsonProperty("books")
     private final List<BookDTO> bookDTOList;
-    @JsonView(View.Book.class)
+
     private int status;
-    @JsonView(View.Book.class)
     private final int count;
 
     public BooksDTO(List<Book> books, String uri) {
         this.bookDTOList = wrapBooksToDTO(books, uri);
         this.count = books.size();
     }
-
 
     private List<BookDTO> wrapBooksToDTO(List<Book> books, String uri) {
         return books.stream().map(book -> new BookDTO(book, uri)).toList();
