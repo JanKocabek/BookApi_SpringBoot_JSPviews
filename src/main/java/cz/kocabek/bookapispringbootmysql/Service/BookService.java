@@ -41,7 +41,15 @@ public class BookService {
     }
 
     public void deleteBook(Long id) {
-            bookRepository.deleteById(id);
+        bookRepository.deleteById(id);
+    }
+
+    public boolean isIsbnTaken(String isbn) {
+        return bookRepository.findByIsbn(isbn).isPresent();
+    }
+
+    public boolean isIsbnTakenByOtherBook(Long id, String isbn) {
+        return bookRepository.findByIsbn(isbn).map(book -> !book.getId().equals(id)).orElse(false);
     }
 }
 

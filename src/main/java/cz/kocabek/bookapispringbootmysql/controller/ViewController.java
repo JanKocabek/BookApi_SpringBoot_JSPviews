@@ -45,6 +45,13 @@ public class ViewController {
             model.addAttribute("action", "add");
             return "form";
         }
+        if(bookService.isIsbnTaken(book.getIsbn()))
+        {
+            bindingResult.rejectValue("isbn", "error.book", "Book with ISBN %s already exists".formatted(book.getIsbn()));
+            model.addAttribute("book", book);
+            model.addAttribute("action", "add");
+            return "form";
+        }
         bookService.addBook(book);
         return "redirect:/books";
     }
@@ -60,6 +67,13 @@ public class ViewController {
     @PostMapping("/update")
     public String updateBook(@Valid Book book, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("book", book);
+            model.addAttribute("action", "update");
+            return "form";
+        }
+        if(bookService.isIsbnTakenByOtherBook(book.getId(), book.getIsbn()))
+        {
+            bindingResult.rejectValue("isbn", "error.book", "Other Book with ISBN %s already exists".formatted(book.getIsbn()));
             model.addAttribute("book", book);
             model.addAttribute("action", "update");
             return "form";
