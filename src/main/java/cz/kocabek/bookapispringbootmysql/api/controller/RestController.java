@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @org.springframework.web.bind.annotation.RestController
-@RequestMapping("/api")
+@RequestMapping("/api/books")
 public class RestController {
 
     private final BookService bookService;

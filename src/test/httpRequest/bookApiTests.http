@@ -1,5 +1,5 @@
 ### 1. Create book with valid 10-digit ISBN
-POST http://localhost:8080/api
+POST http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -34,7 +34,7 @@ Content-Type: application/json
 %}
 
 ### 2. Create book with valid 13-digit ISBN
-POST http://localhost:8080/api
+POST http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -61,7 +61,7 @@ Content-Type: application/json
 %}
 
 ### 3. Try to create book with malformed ISBN (invalid format)
-POST http://localhost:8080/api
+POST http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -85,7 +85,7 @@ Content-Type: application/json
 %}
 
 ### 4. Try to create book with missing ISBN
-POST http://localhost:8080/api
+POST http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -107,7 +107,7 @@ Content-Type: application/json
 %}
 
 ### 5. Try to create book with duplicate ISBN
-POST http://localhost:8080/api
+POST http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -132,7 +132,7 @@ Content-Type: application/json
 %}
 
 ### 6. Find book by valid ID
-GET http://localhost:8080/api/{{valid_book_id}}
+GET http://localhost:8080/api/books/{{valid_book_id}}
 
 > {%
     client.test("Response should be 200 OK", function (){
@@ -148,7 +148,7 @@ GET http://localhost:8080/api/{{valid_book_id}}
 %}
 
 ### 7. Try to find book by non-existent ID
-GET http://localhost:8080/api/99999
+GET http://localhost:8080/api/books/99999
 
 > {%
     client.test("Response should be 404 NOT FOUND", function (){
@@ -163,7 +163,7 @@ GET http://localhost:8080/api/99999
 %}
 
 ### 8. Update book with valid data
-PUT http://localhost:8080/api
+PUT http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -192,7 +192,7 @@ Content-Type: application/json
 %}
 
 ### 9. Try to update book with non-existent ID
-PUT http://localhost:8080/api
+PUT http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -217,7 +217,7 @@ Content-Type: application/json
 %}
 
 ### 10. Try to update book with duplicate ISBN
-PUT http://localhost:8080/api
+PUT http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -243,7 +243,7 @@ Content-Type: application/json
 %}
 
 ### 11. Try to update book with malformed ISBN
-PUT http://localhost:8080/api
+PUT http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -267,7 +267,7 @@ Content-Type: application/json
 %}
 
 ### 12. Find all books
-GET http://localhost:8080/api
+GET http://localhost:8080/api/books
 
 > {%
     client.test("Response should be 200 OK", function (){
@@ -290,7 +290,7 @@ GET http://localhost:8080/api
 %}
 
 ### 13. Delete book with valid ID
-DELETE http://localhost:8080/api/{{valid_book_id_13}}
+DELETE http://localhost:8080/api/books/{{valid_book_id_13}}
 
 > {%
     client.test("Response should be 204 NO CONTENT", function (){
@@ -303,7 +303,7 @@ DELETE http://localhost:8080/api/{{valid_book_id_13}}
 %}
 
 ### 14. Try to delete book with non-existent ID
-DELETE http://localhost:8080/api/99999
+DELETE http://localhost:8080/api/books/99999
 
 > {%
     client.test("Response should be 404 NOT FOUND", function (){
@@ -318,7 +318,7 @@ DELETE http://localhost:8080/api/99999
 %}
 
 ### 15. Verify deleted book is gone
-GET http://localhost:8080/api/{{valid_book_id_13}}
+GET http://localhost:8080/api/books/{{valid_book_id_13}}
 
 > {%
     client.test("Response should be 404 NOT FOUND", function (){
@@ -332,7 +332,7 @@ GET http://localhost:8080/api/{{valid_book_id_13}}
 %}
 
 ### 16. Test edge case - ISBN with only digits (no dashes)
-POST http://localhost:8080/api
+POST http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -357,7 +357,7 @@ Content-Type: application/json
 %}
 
 ### 17. Test edge case - 13-digit ISBN without dashes
-POST http://localhost:8080/api
+POST http://localhost:8080/api/books
 Content-Type: application/json
 
 {
@@ -380,7 +380,7 @@ Content-Type: application/json
 %}
 
 ### 18. Cleanup - Delete test books
-DELETE http://localhost:8080/api/{{valid_book_id}}
+DELETE http://localhost:8080/api/books/{{valid_book_id}}
 
 > {%
     client.test("Cleanup should be successful", function (){
@@ -389,7 +389,7 @@ DELETE http://localhost:8080/api/{{valid_book_id}}
 %}
 
 ### 19. Cleanup - Delete clean code book
-DELETE http://localhost:8080/api/{{clean_code_id}}
+DELETE http://localhost:8080/api/books/{{clean_code_id}}
 
 > {%
     client.test("Cleanup should be successful", function (){
