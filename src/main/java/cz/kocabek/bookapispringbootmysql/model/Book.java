@@ -23,7 +23,7 @@ public class Book {
     private Long id;
 
     @NotEmpty(message = "Book must have ISBN")
-    @Pattern(regexp = "^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$", message = "ISBN can contain only  10 or 13  digits, and dashes")
+    @Pattern(regexp = "^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$", message = "ISBN must contain exactly just 10 or 13  digits, and  can contain dashes")
     @Size(min = 10, max = 20, message = "ISBN must be between 10 to 20 characters")
     @Column(unique = true, length = 20, nullable = false)
     private String isbn;
