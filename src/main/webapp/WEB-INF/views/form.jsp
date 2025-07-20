@@ -5,6 +5,7 @@
 <html>
 <head>
     <title>Books</title>
+    <link rel="stylesheet" href="/css/form.css">
 </head>
 <body>
 <c:choose>
@@ -24,31 +25,31 @@
             Title:
             <form:input path="title"/>
         </label>
-        <form:errors path="title"/>
-        <br/>
-        <label>
-            Author:
-            <form:input path="author"/>
-        </label>
-        <form:errors path="author"/>
+        <form:errors path="title" cssClass="error"/>
         <br/>
         <label>
             ISBN:
             <form:input path="isbn"/>
         </label>
-        <form:errors path="isbn"/>
+        <form:errors path="isbn" cssClass="error" />
+        <br/>
+        <label>
+            Author:
+            <form:input path="author"/>
+        </label>
+        <form:errors path="author" cssClass="error"/>
         <br/>
         <label>
             publisher:
             <form:input path="publisher"/>
         </label>
-        <form:errors path="publisher"/>
+        <form:errors path="publisher" cssClass="error"/>
         <br/>
         <label>
             Type:
             <form:input path="type"/>
         </label>
-        <form:errors path="type"/>
+        <form:errors path="type" cssClass="error"/>
         <br/>
         <input type="submit" value="Save"/>
     </fieldset>
